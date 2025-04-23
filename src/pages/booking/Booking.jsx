@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { movies } from "../data/movies";
-import CinemaHall from "../components/CinemaHall";
+import { movies } from "../../data/movies";
+import CinemaHall from "../../components/cinema-hall/CinemaHall";
 import styles from "./Booking.module.css";
 
 const Booking = () => {

@@ -1,7 +1,10 @@
 import { Calendar, Clock, Film } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import styles from "./MovieCard.module.css";
 
 const MovieCard = ({ movie }) => {
+  const navigate = useNavigate();
+
   const formatShowtime = (showtime) => {
     const date = new Date(showtime);
     return {
@@ -38,18 +41,25 @@ const MovieCard = ({ movie }) => {
 
         <div className={styles.metaInfo}>
           <div className={styles.metaItem}>
-            <Calendar className="w-4 h-4" />
+            <Calendar className={styles.icon} />
             <span>{date}</span>
           </div>
           <div className={styles.metaItem}>
-            <Clock className="w-4 h-4" />
+            <Clock className={styles.icon} />
             <span>{time}</span>
           </div>
           <div className={styles.metaItem}>
-            <Film className="w-4 h-4" />
+            <Film className={styles.icon} />
             <span>{movie.genre}</span>
           </div>
         </div>
+
+        <button
+          className={styles.bookButton}
+          onClick={() => navigate(`/booking/${movie.id}`)}
+        >
+          Book Tickets
+        </button>
       </div>
     </div>
   );
