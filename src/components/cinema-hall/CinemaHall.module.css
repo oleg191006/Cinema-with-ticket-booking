@@ -57,10 +57,10 @@
   color: white;
 }
 
-.seat.taken {
-  background: #e5e7eb;
-  border-color: #9ca3af;
-  color: #9ca3af;
+.seat.booked {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: white;
   cursor: not-allowed;
 }
 

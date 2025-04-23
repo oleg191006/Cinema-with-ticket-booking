@@ -3,16 +3,12 @@ import styles from "./CinemaHall.module.css";
 const ROWS = 8;
 const SEATS_PER_ROW = 12;
 
-const CinemaHall = ({ selectedSeats, onSeatSelect }) => {
+const CinemaHall = ({ selectedSeats, bookedSeats, onSeatSelect }) => {
   const isSeatSelected = (seatId) => selectedSeats.includes(seatId);
-  const isSeatTaken = (seatId) => {
-    // Simulate some seats being taken
-    const takenSeats = [1, 15, 28, 42, 56, 73, 89];
-    return takenSeats.includes(seatId);
-  };
+  const isSeatBooked = (seatId) => bookedSeats.includes(seatId);
 
   const handleSeatClick = (seatId) => {
-    if (isSeatTaken(seatId)) return;
+    if (isSeatBooked(seatId)) return;
 
     if (isSeatSelected(seatId)) {
       onSeatSelect(selectedSeats.filter((id) => id !== seatId));
@@ -35,14 +31,14 @@ const CinemaHall = ({ selectedSeats, onSeatSelect }) => {
               const seatId = row * SEATS_PER_ROW + seat + 1;
               const seatClass = `${styles.seat} ${
                 isSeatSelected(seatId) ? styles.selected : ""
-              } ${isSeatTaken(seatId) ? styles.taken : ""}`;
+              } ${isSeatBooked(seatId) ? styles.booked : ""}`;
 
               return (
                 <button
                   key={seat}
                   className={seatClass}
                   onClick={() => handleSeatClick(seatId)}
-                  disabled={isSeatTaken(seatId)}
+                  disabled={isSeatBooked(seatId)}
                 >
                   {seat + 1}
                 </button>
@@ -62,8 +58,8 @@ const CinemaHall = ({ selectedSeats, onSeatSelect }) => {
           <span>Selected</span>
         </div>
         <div className={styles.legendItem}>
-          <div className={`${styles.seat} ${styles.taken}`}></div>
-          <span>Taken</span>
+          <div className={`${styles.seat} ${styles.booked}`}></div>
+          <span>Booked</span>
         </div>
       </div>
     </div>
