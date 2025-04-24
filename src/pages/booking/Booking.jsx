@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { movies } from "../../data/movies";
 import { BookingService } from "../../services/BookingService";
 import CinemaHall from "../../components/cinema-hall/CinemaHall";
 import styles from "./Booking.module.css";
@@ -10,7 +9,9 @@ import styles from "./Booking.module.css";
 const Booking = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const movie = movies.find((m) => m.id === parseInt(id));
+  const [movie, setMovie] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [bookedSeats, setBookedSeats] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -22,11 +23,30 @@ const Booking = () => {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
+    fetchMovie();
+  }, [id]);
+
+  useEffect(() => {
     if (movie) {
       const booked = BookingService.getBookedSeats(movie.id);
       setBookedSeats(booked);
     }
   }, [movie]);
+
+  const fetchMovie = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/movies/${id}`);
+      if (!response.ok) {
+        throw new Error("Movie not found");
+      }
+      const data = await response.json();
+      setMovie(data);
+      setLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -70,10 +90,14 @@ const Booking = () => {
     }
   };
 
-  if (!movie) {
+  if (loading) {
+    return <div className={styles.loading}>Loading...</div>;
+  }
+
+  if (error || !movie) {
     return (
       <div className={styles.error}>
-        <h2>Movie not found</h2>
+        <h2>{error || "Movie not found"}</h2>
         <button onClick={() => navigate("/")} className={styles.backButton}>
           Back to Movies
         </button>
